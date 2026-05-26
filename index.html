@@ -358,6 +358,13 @@
     }
 
     /********************
+     * SUB-SCREENS (para A Conocernos y Yo Nunca)
+     * (nuevo, mínimo, para evitar scroll y hacer paso a paso)
+     ********************/
+    .sub-screen{ display:none; flex-direction:column; gap: 14px; }
+    .sub-screen.active{ display:flex; }
+
+    /********************
      * IMPOSTOR visuals (now aligned to suite)
      ********************/
     .im-screen{ display:none; flex-direction:column; gap: 14px; }
@@ -499,40 +506,49 @@
           <button class="btn ghost" onclick="Suite.go('menu')">🏠 Menú</button>
         </div>
 
-        <div class="box narrow stack">
-          <input type="text" id="a-inpName" placeholder="Nombre jugador..." onkeypress="if(event.key==='Enter') AConocernos.addPlayer()" />
-          <button class="btn" onclick="AConocernos.addPlayer()">➕ Agregar jugador</button>
+        <!-- SUB-PANTALLAS (nuevo) -->
+        <div class="box narrow" style="padding:0; border:none; background:transparent; box-shadow:none;">
+          <div class="sub-screen active" id="a-scr-config">
+            <div class="box narrow stack">
+              <input type="text" id="a-inpName" placeholder="Nombre jugador..." onkeypress="if(event.key==='Enter') AConocernos.addPlayer()" />
+              <button class="btn" onclick="AConocernos.addPlayer()">➕ Agregar jugador</button>
 
-          <div id="a-playerList" style="color: rgba(34,211,238,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
+              <div id="a-playerList" style="color: rgba(34,211,238,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
 
-          <div class="stack" style="gap:10px;">
-            <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad de preguntas:</label>
-            <select id="a-selQty">
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="200">200</option>
-            </select>
+              <div class="stack" style="gap:10px;">
+                <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad de preguntas:</label>
+                <select id="a-selQty">
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                </select>
+              </div>
+
+              <div class="row">
+                <button class="btn primary" onclick="AConocernos.startGame()">🎮 Iniciar</button>
+                <button class="btn danger" onclick="AConocernos.clearPlayers()">🧹 Limpiar</button>
+              </div>
+            </div>
           </div>
 
-          <div class="row">
-            <button class="btn primary" onclick="AConocernos.startGame()">🎮 Iniciar</button>
-            <button class="btn danger" onclick="AConocernos.clearPlayers()">🧹 Limpiar</button>
-          </div>
-        </div>
+          <div class="sub-screen" id="a-scr-play">
+            <div id="a-scr-game" class="box narrow stack">
+              <div class="muted center" id="a-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
 
-        <div id="a-scr-game" class="box narrow stack" style="display:none;">
-          <div class="muted center" id="a-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
+              <div class="center">
+                <div id="a-uiCat" style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;"></div>
+                <div id="a-uiQuestion" style="margin-top:12px; font-size:1.42rem; min-height:160px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:950;"></div>
 
-          <div class="center">
-            <div id="a-uiCat" style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;"></div>
-            <div id="a-uiQuestion" style="margin-top:12px; font-size:1.42rem; min-height:160px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:950;"></div>
-            <div id="a-uiCurrentPlayer" style="margin-top:12px; color: rgba(124,58,237,.95); font-weight:1000; font-style:italic;"></div>
-          </div>
+                <!-- espacio extra abajo (nuevo) -->
+                <div id="a-uiCurrentPlayer" style="margin-top:12px; margin-bottom:18px; color: rgba(124,58,237,.95); font-weight:1000; font-style:italic;"></div>
+              </div>
 
-          <div class="row">
-            <button class="btn primary" onclick="AConocernos.nextQuestion()">➡️ Siguiente</button>
-            <button class="btn danger" onclick="AConocernos.endSession()">🧯 Terminar</button>
+              <div class="row">
+                <button class="btn primary" onclick="AConocernos.nextQuestion()">➡️ Siguiente</button>
+                <button class="btn danger" onclick="AConocernos.endSession()">🧯 Terminar</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -651,50 +667,59 @@
           <button class="btn ghost" onclick="Suite.go('menu')">🏠 Menú</button>
         </div>
 
-        <div class="box narrow stack">
-          <input type="text" id="y-inpName" placeholder="Nombre (opcional)..." onkeypress="if(event.key==='Enter') YoNunca.addPlayer()" />
-          <button class="btn" onclick="YoNunca.addPlayer()">➕ Agregar jugador</button>
+        <!-- SUB-PANTALLAS (nuevo) -->
+        <div class="box narrow" style="padding:0; border:none; background:transparent; box-shadow:none;">
+          <div class="sub-screen active" id="y-scr-config">
+            <div class="box narrow stack">
+              <input type="text" id="y-inpName" placeholder="Nombre (opcional)..." onkeypress="if(event.key==='Enter') YoNunca.addPlayer()" />
+              <button class="btn" onclick="YoNunca.addPlayer()">➕ Agregar jugador</button>
 
-          <div id="y-playerList" style="color: rgba(163,230,53,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
+              <div id="y-playerList" style="color: rgba(163,230,53,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
 
-          <div class="row">
-            <div class="stack" style="gap:10px;">
-              <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad:</label>
-              <select id="y-selQty">
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100" selected>100</option>
-              </select>
+              <div class="row">
+                <div class="stack" style="gap:10px;">
+                  <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad:</label>
+                  <select id="y-selQty">
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                  </select>
+                </div>
+
+                <div class="stack" style="gap:10px;">
+                  <label class="muted" style="font-size:.9rem; font-weight:950;">Turnos:</label>
+                  <select id="y-selTurns">
+                    <option value="auto" selected>Auto (si hay 2+)</option>
+                    <option value="on">Siempre</option>
+                    <option value="off">Nunca</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <button class="btn primary" onclick="YoNunca.startGame()">🎮 Iniciar</button>
+                <button class="btn danger" onclick="YoNunca.clearPlayers()">🧹 Limpiar</button>
+              </div>
             </div>
+          </div>
 
-            <div class="stack" style="gap:10px;">
-              <label class="muted" style="font-size:.9rem; font-weight:950;">Turnos:</label>
-              <select id="y-selTurns">
-                <option value="auto" selected>Auto (si hay 2+)</option>
-                <option value="on">Siempre</option>
-                <option value="off">Nunca</option>
-              </select>
+          <div class="sub-screen" id="y-scr-play">
+            <div id="y-scr-game" class="box narrow stack">
+              <div class="muted center" id="y-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
+
+              <div class="center">
+                <div style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;">Yo nunca...</div>
+                <div id="y-uiStatement" style="margin-top:12px; font-size:1.45rem; min-height:150px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:1100;"></div>
+
+                <!-- espacio extra abajo (nuevo) -->
+                <div id="y-uiCurrentPlayer" style="margin-top:12px; margin-bottom:18px; color: rgba(34,197,94,.95); font-weight:1000; font-style:italic;"></div>
+              </div>
+
+              <div class="row">
+                <button class="btn primary" onclick="YoNunca.next()">➡️ Siguiente</button>
+                <button class="btn danger" onclick="YoNunca.end()">🧯 Terminar</button>
+              </div>
             </div>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="YoNunca.startGame()">🎮 Iniciar</button>
-            <button class="btn danger" onclick="YoNunca.clearPlayers()">🧹 Limpiar</button>
-          </div>
-        </div>
-
-        <div id="y-scr-game" class="box narrow stack" style="display:none;">
-          <div class="muted center" id="y-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
-
-          <div class="center">
-            <div style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;">Yo nunca...</div>
-            <div id="y-uiStatement" style="margin-top:12px; font-size:1.45rem; min-height:150px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:1100;"></div>
-            <div id="y-uiCurrentPlayer" style="margin-top:12px; color: rgba(34,197,94,.95); font-weight:1000; font-style:italic;"></div>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="YoNunca.next()">➡️ Siguiente</button>
-            <button class="btn danger" onclick="YoNunca.end()">🧯 Terminar</button>
           </div>
         </div>
       </section>
@@ -1017,6 +1042,9 @@
       let deck = [], deckPos = 0;
       let lastPlayerIndex = -1;
 
+      // NUEVO (solo para saber si está en juego y restaurar pantalla)
+      let inGame = false;
+
       const $ = (id) => document.getElementById(id);
 
       function shuffleArray(arr){
@@ -1048,6 +1076,13 @@
         lastPlayerIndex = idx; return players[idx];
       }
 
+      // NUEVO: cambio de subpantalla (config <-> juego)
+      function changeScreen(screenId){
+        document.querySelectorAll('#sec-aconocernos .sub-screen').forEach(s => s.classList.remove('active'));
+        $(screenId).classList.add('active');
+        window.scrollTo(0,0);
+      }
+
       function addPlayer(){
         const input = $("a-inpName");
         const name = (input.value||"").trim();
@@ -1063,7 +1098,11 @@
         playedCount = 0; lastPlayerIndex = -1;
         deck = shuffleArray([...Array(QUESTIONS_DB.length).keys()]).slice(0, totalToPlay);
         deckPos = 0;
-        $("a-scr-game").style.display = "block";
+
+        // NUEVO: ir a pantalla de juego
+        inGame = true;
+        changeScreen("a-scr-play");
+
         nextQuestion();
       }
 
@@ -1082,7 +1121,10 @@
       }
 
       function endSession(silent=false){
-        $("a-scr-game").style.display = "none";
+        // NUEVO: volver a config
+        inGame = false;
+        changeScreen("a-scr-config");
+
         playedCount = 0; totalToPlay = 0; deck = []; deckPos = 0;
         if(!silent) alert("Sesión terminada.");
       }
@@ -1092,11 +1134,16 @@
         players = [];
         try{ localStorage.removeItem(STORAGE_KEY_PLAYERS); }catch(e){}
         renderPlayers();
+        // NUEVO: asegurar volver a config
+        inGame = false;
+        changeScreen("a-scr-config");
         endSession(true);
       }
 
       function onEnter(){
         renderPlayers();
+        // NUEVO: mostrar la pantalla correcta al volver a entrar
+        changeScreen(inGame ? "a-scr-play" : "a-scr-config");
       }
 
       loadPlayers();
@@ -1575,6 +1622,9 @@
       let lastPlayerIndex = -1;
       let turnsMode = "auto";
 
+      // NUEVO (solo para saber si está en juego y restaurar pantalla)
+      let inGame = false;
+
       const $ = (id) => document.getElementById(id);
 
       function shuffleArray(arr){
@@ -1602,6 +1652,13 @@
         lastPlayerIndex = idx; return players[idx];
       }
 
+      // NUEVO: cambio de subpantalla (config <-> juego)
+      function changeScreen(screenId){
+        document.querySelectorAll('#sec-yonunca .sub-screen').forEach(s => s.classList.remove('active'));
+        $(screenId).classList.add('active');
+        window.scrollTo(0,0);
+      }
+
       function addPlayer(){
         const input = $("y-inpName");
         const name = (input.value||"").trim();
@@ -1623,7 +1680,11 @@
         playedCount = 0; lastPlayerIndex = -1;
         deck = shuffleArray([...Array(STATEMENTS.length).keys()]).slice(0, totalToPlay);
         deckPos = 0;
-        $("y-scr-game").style.display = "block";
+
+        // NUEVO: ir a pantalla de juego
+        inGame = true;
+        changeScreen("y-scr-play");
+
         next();
       }
 
@@ -1641,7 +1702,10 @@
       }
 
       function end(silent=false){
-        $("y-scr-game").style.display = "none";
+        // NUEVO: volver a config
+        inGame = false;
+        changeScreen("y-scr-config");
+
         playedCount = 0; totalToPlay = 0; deck = []; deckPos = 0;
         if(!silent) alert("Terminado.");
       }
@@ -1651,10 +1715,17 @@
         players = [];
         try{ localStorage.removeItem(STORAGE_KEY_PLAYERS); }catch(e){}
         renderPlayers();
+        // NUEVO: asegurar volver a config
+        inGame = false;
+        changeScreen("y-scr-config");
         end(true);
       }
 
-      function onEnter(){ renderPlayers(); }
+      function onEnter(){ 
+        renderPlayers();
+        // NUEVO: mostrar la pantalla correcta al volver a entrar
+        changeScreen(inGame ? "y-scr-play" : "y-scr-config");
+      }
 
       loadPlayers();
       return { addPlayer, startGame, next, end, clearPlayers, onEnter };
