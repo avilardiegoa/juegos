@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Juegos Avila Mora 🎮</title>
+
+  <!-- FAVICON (SOLO 🧠) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' fill='%23070A12'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='84'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E">
+
+  <!-- PWA Manifest -->
+  <link id="pwa-manifest" rel="manifest" />
+
+  <style>
+    :root{
+      --bg:#070A12;
+      --card:#11172A;
+      --card2:#0c1222;
+      --border:#25304a;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+
+      /* defaults */
+      --primary:#7c3aed;
+      --accent:#22d3ee;
+      --danger:#ff3d9a;
+      --warning:#ffcc00;
+
+      /* gradient tokens (overridden by theme) */
+      --gradA: rgba(124,58,237,1);
+      --gradB: rgba(255,61,154,.92);
+
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --radius: 20px;
+      --radius-sm: 14px;
+
+      --content-max: 520px;
+      --content-wide: 980px;
+
+      --s1: 8px;
+      --s2: 12px;
+      --s3: 16px;
+      --s4: 20px;
+      --s5: 28px;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    body{
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(124,58,237,.20), transparent 60%),
+        radial-gradient(900px 500px at 80% 15%, rgba(34,211,238,.18), transparent 55%),
+        radial-gradient(900px 500px at 50% 110%, rgba(255,61,154,.12), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height:100vh;
+      -webkit-tap-highlight-color: transparent;
+      display:flex;
+      flex-direction:column;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+
+    /* Topbar */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,18,.60);
+      border-bottom: 1px solid rgba(37,48,74,.7);
+    }
+    .topbar-inner{
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      user-select:none;
+      cursor:pointer;
+      min-width: 0;
+    }
+    .brand .logo{
+      width: 36px; height: 36px;
+      border-radius: 14px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(124,58,237,1), rgba(34,211,238,.85));
+      box-shadow: 0 10px 22px rgba(124,58,237,.22);
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+    .brand .txt{ min-width: 0; line-height: 1.1; }
+    .brand .txt .name{ white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .brand .txt small{
+      display:block;
+      color: var(--muted);
+      font-weight: 850;
+      text-transform: uppercase;
+      font-size: .68rem;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* Hamburger */
+    .hamburger{
+      border: 1px solid rgba(148,163,184,.35);
+      background: rgba(7,10,18,.25);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      font-weight: 1000;
+    }
+    .hamburger .bars{
+      width: 18px;
+      height: 12px;
+      position: relative;
+      display:inline-block;
+    }
+    .hamburger .bars span{
+      position:absolute;
+      left:0; right:0;
+      height:2px;
+      background: rgba(248,250,252,.9);
+      border-radius: 999px;
+      transition: .18s ease;
+    }
+    .hamburger .bars span:nth-child(1){ top:0; }
+    .hamburger .bars span:nth-child(2){ top:5px; opacity:.95; }
+    .hamburger .bars span:nth-child(3){ top:10px; opacity:.9; }
+    .hamburger[aria-expanded="true"] .bars span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
+    .hamburger[aria-expanded="true"] .bars span:nth-child(2){ opacity:0; }
+    .hamburger[aria-expanded="true"] .bars span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); }
+
+    /* Nav panel */
+    .nav-panel{
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 14px 14px;
+      display:none;
+    }
+    .nav-panel.open{ display:block; }
+    .nav-links{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    @media (min-width: 860px){
+      .hamburger{ display:none; }
+      .topbar-inner{ max-width: var(--content-wide); }
+      .nav-panel{
+        display:block !important;
+        padding: 0;
+        margin: 0 auto;
+        max-width: var(--content-wide);
+      }
+      .nav-links{
+        flex-direction: row;
+        justify-content:flex-end;
+        align-items:center;
+        gap: 10px;
+        padding: 0 14px 14px;
+      }
+    }
+
+    /* Layout */
+    main{ width:100%; flex:1; display:flex; }
+    .wrap{
+      width:100%;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 16px 14px 20px;
+      display:flex;
+      flex-direction:column;
+      gap: var(--s4);
+    }
+    @media (min-width: 900px){
+      .wrap{ max-width: var(--content-wide); }
+    }
+
+    /* Components */
+    .box{
+      background: linear-gradient(180deg, rgba(17,23,42,.95), rgba(12,18,34,.95));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .box.narrow{ max-width: 460px; margin: 0 auto; }
+
+    .stack{ display:flex; flex-direction:column; gap: var(--s3); }
+    .row{ display:flex; gap: 10px; flex-wrap:wrap; }
+    .row > *{ flex:1; min-width: 210px; }
+
+    .muted{ color: var(--muted); }
+    .center{ text-align:center; }
+
+    input, select{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: var(--radius-sm);
+      border:1px solid rgba(148,163,184,.22);
+      background: rgba(7,10,18,.55);
+      color: var(--text);
+      outline:none;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    input::placeholder{ color: rgba(148,163,184,.75); font-weight: 800; }
+
+    .btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding: 14px 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 1000;
+      font-size: 1rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      user-select:none;
+      transition: .18s ease;
+      color: var(--text);
+      background: rgba(7,10,18,.20);
+      border: 2px solid rgba(148,163,184,.28);
+      box-shadow: 0 10px 26px rgba(0,0,0,.10);
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(148,163,184,.45); }
+    .btn:active{ transform: scale(.97); }
+
+    .btn.primary{
+      background: linear-gradient(135deg, var(--gradA), var(--gradB));
+      border: none;
+      box-shadow: 0 16px 34px rgba(0,0,0,.18);
+    }
+    .btn.primary:hover{ filter: brightness(1.06); }
+
+    .btn.ghost{
+      background: rgba(7,10,18,.18);
+      border-color: rgba(148,163,184,.28);
+      box-shadow:none;
+    }
+    .btn.danger{
+      background: rgba(7,10,18,.20);
+      border-color: rgba(255,0,85,.55);
+      box-shadow: 0 10px 26px rgba(255,0,85,.08);
+    }
+    .btn.danger:active{ background: rgba(255,0,85,.18); }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,211,238,.35);
+      background: rgba(34,211,238,.10);
+      color: rgba(34,211,238,.95);
+      font-weight: 1000;
+      font-size: .78rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .game-title{
+      font-size: 2rem;
+      font-weight: 1100;
+      text-align:center;
+      letter-spacing:.3px;
+      margin-bottom: 2px;
+      color: var(--primary);
+      text-shadow: 0 0 18px rgba(0,0,0,.18);
+    }
+    .game-sub{
+      text-align:center;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 750;
+    }
+
+    /* Sections */
+    .section{ display:none; }
+    .section.active{ display:block; animation: sectionIn .22s ease-out; }
+    @keyframes sectionIn{ from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
+
+    /* Menu grid */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: var(--s3);
+    }
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* Footer */
+    footer{
+      border-top: 1px solid rgba(37,48,74,.65);
+      background: rgba(7,10,18,.45);
+      color: rgba(148,163,184,.92);
+      text-align:center;
+      font-size:.85rem;
+      padding: 14px 10px;
+    }
+
+    /********************
+     * THEMES (gradients per game)
+     ********************/
+    .theme-aconocernos{
+      --primary:#7c3aed;
+      --accent:#22d3ee;
+      --danger:#ff3d9a;
+      --warning:#ffcc00;
+      --gradA: rgba(124,58,237,1);
+      --gradB: rgba(255,61,154,.92);
+    }
+
+    .theme-impostor{
+      --primary:#00ffcc;
+      --accent:#00ffcc;
+      --danger:#ff0055;
+      --warning:#ffcc00;
+      --gradA: rgba(0,255,204,1);
+      --gradB: rgba(255,0,85,.88);
+    }
+
+    .theme-yonunca{
+      --primary:#22c55e;
+      --accent:#a3e635;
+      --danger:#fb7185;
+      --warning:#fbbf24;
+      --gradA: rgba(34,197,94,1);
+      --gradB: rgba(163,230,53,.92);
+    }
+
+    /********************
+     * IMPOSTOR visuals (now aligned to suite)
+     ********************/
+    .im-screen{ display:none; flex-direction:column; gap: 14px; }
+    .im-screen.active{ display:flex; }
+
+    .player-list{
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+      margin: 10px 0 0; max-height: 180px; overflow-y:auto; padding:6px;
+    }
+    .player-tag{
+      background: rgba(7,10,18,.35);
+      padding: 8px 14px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: .95rem;
+      border: 1px solid rgba(148,163,184,.22);
+      font-weight: 1000;
+    }
+    .delete-btn{ color: var(--danger); cursor:pointer; font-weight: 1200; padding-left:4px; }
+
+    .emoji-display{
+      font-size: 5.0rem;
+      margin: 10px 0;
+      text-shadow: 0 0 20px rgba(255,255,255,0.10);
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+    .timer-text{
+      font-size: 4.0rem;
+      font-weight: 1200;
+      color: var(--warning);
+      text-shadow: 0 0 15px rgba(255,204,0,0.2);
+      letter-spacing: -1px;
+      margin: 6px 0 10px;
+      transition: color .3s;
+    }
+    .label-muted{
+      color: rgba(148,163,184,.9);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display:block;
+      font-weight: 1000;
+    }
+    .blinking{
+      color: var(--danger) !important;
+      text-shadow: 0 0 25px rgba(255,0,85,0.55);
+      animation: pulse-red 1s infinite;
+    }
+    @keyframes pulse-red{ 0%{opacity:1;} 50%{opacity:.3;} 100%{opacity:1;} }
+
+    .vote-btn{
+      width:100%;
+      padding: 15px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(7,10,18,.35);
+      color: var(--text);
+      font-weight: 1000;
+      font-size: 1.08rem;
+      text-align:left;
+      cursor:pointer;
+      transition:.12s;
+    }
+    .vote-btn:active{
+      transform: scale(.98);
+      background: rgba(255,0,85,.18);
+      border-color: rgba(255,0,85,.55);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" role="button" tabindex="0" onclick="Suite.go('menu')">
+        <div class="logo">🧠</div>
+        <div class="txt">
+          <div class="name">Avila Mora</div>
+          <small>Familia</small>
+        </div>
+      </div>
+
+      <button id="navToggle" class="hamburger" aria-controls="siteNav" aria-expanded="false" aria-label="Abrir menú" type="button">
+        <span class="bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span>MENÚ</span>
+      </button>
+    </div>
+
+    <nav id="siteNav" class="nav-panel" hidden aria-label="Navegación principal">
+      <div class="nav-links">
+        <button class="btn ghost nav-item" onclick="Suite.go('menu'); Nav.close()">🏠 Menú</button>
+        <button class="btn ghost nav-item" onclick="Suite.go('aconocernos'); Nav.close()">🧠 A conocernos!</button>
+        <button class="btn ghost nav-item" onclick="Suite.go('impostor'); Nav.close()">🕵️ El impostor</button>
+        <button class="btn ghost nav-item" onclick="Suite.go('yonunca'); Nav.close()">🙊 Yo nunca</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap">
+
+      <!-- MENU -->
+      <section id="sec-menu" class="section active">
+        <div class="box narrow stack">
+          <div class="center"><span class="badge">🎮 Juegos</span></div>
+          <h1 class="game-title">Juegos Avila Mora</h1>
+          <div class="grid" style="margin-top: 6px;">
+            <div class="box stack theme-aconocernos" style="box-shadow:none;">
+              <div class="badge">🧠 A conocernos!</div>
+              <div class="muted" style="line-height:1.45;">Preguntas por turnos para conversar y reír.</div>
+              <button class="btn primary" onclick="Suite.go('aconocernos')">Jugar</button>
+            </div>
+
+            <div class="box stack theme-impostor" style="box-shadow:none;">
+              <div class="badge" style="border-color: rgba(0,255,204,.35); background: rgba(0,255,204,.10); color: rgba(0,255,204,.95);">🕵️ El impostor</div>
+              <div class="muted" style="line-height:1.45;">Todos ven una palabra… menos el impostor.</div>
+              <button class="btn primary" onclick="Suite.go('impostor')">Jugar</button>
+            </div>
+
+            <div class="box stack theme-yonunca" style="box-shadow:none;">
+              <div class="badge" style="border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.10); color: rgba(34,197,94,.95);">🙊 Yo nunca</div>
+              <div class="muted" style="line-height:1.45;">Si te ha pasado, sumas punto o haces un reto suave.</div>
+              <button class="btn primary" onclick="Suite.go('yonunca')">Jugar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- A CONOCERNOS -->
+      <section id="sec-aconocernos" class="section theme-aconocernos">
+        <div class="box narrow stack">
+          <h1 class="game-title">A conocernos! 🧠</h1>
+          <p class="game-sub">Agrega jugadores y respondan por turnos. Simple y buenísimo para romper el hielo.</p>
+          <button class="btn ghost" onclick="Suite.go('menu')">🏠 Menú</button>
+        </div>
+
+        <div class="box narrow stack">
+          <input type="text" id="a-inpName" placeholder="Nombre jugador..." onkeypress="if(event.key==='Enter') AConocernos.addPlayer()" />
+          <button class="btn" onclick="AConocernos.addPlayer()">➕ Agregar jugador</button>
+
+          <div id="a-playerList" style="color: rgba(34,211,238,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
+
+          <div class="stack" style="gap:10px;">
+            <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad de preguntas:</label>
+            <select id="a-selQty">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="AConocernos.startGame()">🎮 Iniciar</button>
+            <button class="btn danger" onclick="AConocernos.clearPlayers()">🧹 Limpiar</button>
+          </div>
+        </div>
+
+        <div id="a-scr-game" class="box narrow stack" style="display:none;">
+          <div class="muted center" id="a-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
+
+          <div class="center">
+            <div id="a-uiCat" style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;"></div>
+            <div id="a-uiQuestion" style="margin-top:12px; font-size:1.42rem; min-height:160px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:950;"></div>
+            <div id="a-uiCurrentPlayer" style="margin-top:12px; color: rgba(124,58,237,.95); font-weight:1000; font-style:italic;"></div>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="AConocernos.nextQuestion()">➡️ Siguiente</button>
+            <button class="btn danger" onclick="AConocernos.endSession()">🧯 Terminar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMPOSTOR -->
+      <section id="sec-impostor" class="section theme-impostor">
+        <div class="box narrow stack">
+          <h1 class="game-title">El impostor 🕵️</h1>
+          <p class="game-sub">Cada uno mira su rol en secreto. Luego discuten y votan al más sospechoso.</p>
+          <div class="row">
+            <button class="btn ghost" onclick="Suite.go('menu')">🏠 Menú</button>
+            <button class="btn danger" onclick="Impostor.clearPlayers()">🧹 Limpiar</button>
+          </div>
+        </div>
+
+        <div class="box narrow" style="padding:0; border:none; background:transparent; box-shadow:none;">
+          <div class="stack" style="gap:14px;">
+            <!-- LOBBY -->
+            <div id="i-scr-lobby" class="im-screen active">
+              <div class="box stack">
+                <span class="label-muted">Jugadores</span>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="i-inpName" placeholder="Nombre..." onkeypress="if(event.key==='Enter') Impostor.addPlayer()" />
+                  <button class="btn" onclick="Impostor.addPlayer()" style="width:auto; padding: 0 16px;">➕</button>
+                </div>
+                <div class="player-list" id="i-uiPlayerList"></div>
+              </div>
+
+              <div class="row">
+                <div class="box stack" style="gap:10px;">
+                  <span class="label-muted">Impostores</span>
+                  <select id="i-selImposters">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+
+                <div class="box stack" style="gap:10px;">
+                  <span class="label-muted">Tiempo</span>
+                  <select id="i-selTime">
+                    <option value="60">1 min</option>
+                    <option value="180">3 min</option>
+                    <option value="300" selected>5 min</option>
+                    <option value="420">7 min</option>
+                    <option value="600">10 min</option>
+                  </select>
+                </div>
+              </div>
+
+              <button onclick="Impostor.initGame()" class="btn primary" style="padding:18px; font-size:1.1rem;">🎮 Comenzar partida</button>
+            </div>
+
+            <!-- PASAR CELULAR -->
+            <div id="i-scr-pass" class="im-screen">
+              <div class="box center" style="padding: 34px 18px;">
+                <div class="emoji-display">📱</div>
+                <p class="label-muted" style="font-size:1.0rem;">Entrega el celular a:</p>
+                <h2 id="i-txtPassName" style="font-size: 2.3rem; color: var(--primary); margin: 14px 0; font-weight: 1200;">-</h2>
+                <p class="muted" style="font-weight:800;">Nadie más debe mirar.</p>
+              </div>
+              <button onclick="Impostor.revealRole()" class="btn primary">👀 Ver mi palabra</button>
+            </div>
+
+            <!-- REVELAR -->
+            <div id="i-scr-reveal" class="im-screen">
+              <div class="box center" style="padding: 30px 18px;">
+                <h3 id="i-txtRevealPlayer" class="muted" style="font-size: 1.12rem; margin-bottom: 10px; font-weight:1000;">-</h3>
+                <div id="i-uiSecretArea"></div>
+              </div>
+              <button onclick="Impostor.confirmAndNext()" class="btn danger">🙈 Ocultar</button>
+            </div>
+
+            <!-- JUEGO / TEMPORIZADOR -->
+            <div id="i-scr-game" class="im-screen center">
+              <div class="box stack" style="gap:10px;">
+                <span class="label-muted" style="color: var(--primary);">Empieza hablando</span>
+                <h2 id="i-txtSpeaker" style="font-size: 2.0rem; font-weight: 1200;">-</h2>
+              </div>
+
+              <div class="box">
+                <div class="timer-text" id="i-uiTimer">05:00</div>
+                <div class="row">
+                  <button id="i-btnPause" onclick="Impostor.toggleTimer()" class="btn">⏸ Pausar</button>
+                  <button onclick="Impostor.startVotingPhase()" class="btn danger">🛑 Votar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- VOTACIÓN -->
+            <div id="i-scr-vote" class="im-screen center">
+              <div class="box">
+                <div class="label-muted" style="margin-bottom:8px;">Votación</div>
+                <p class="muted" style="margin-bottom: 10px; line-height:1.45; font-weight:800;">
+                  Toquen al más sospechoso para eliminarlo.
+                </p>
+                <div style="display:flex; flex-direction:column; gap:10px;" id="i-uiVoteList"></div>
+              </div>
+            </div>
+
+            <!-- RESULTADOS -->
+            <div id="i-scr-result" class="im-screen center">
+              <h1 id="i-txtResultTitle" class="game-title" style="font-size: 2.2rem; margin-bottom:10px;">-</h1>
+              <div class="box" id="i-uiResultArea" style="padding: 28px 18px;"></div>
+              <button onclick="Impostor.changeScreen('i-scr-lobby')" class="btn primary" style="margin-top:14px;">🔄 Nueva ronda</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- YO NUNCA -->
+      <section id="sec-yonunca" class="section theme-yonunca">
+        <div class="box narrow stack">
+          <h1 class="game-title">Yo nunca 🙊</h1>
+          <p class="game-sub">Lean la frase. Si te ha pasado, suma punto o haz un reto suave (agua, aplausos, 3 sentadillas).</p>
+          <button class="btn ghost" onclick="Suite.go('menu')">🏠 Menú</button>
+        </div>
+
+        <div class="box narrow stack">
+          <input type="text" id="y-inpName" placeholder="Nombre (opcional)..." onkeypress="if(event.key==='Enter') YoNunca.addPlayer()" />
+          <button class="btn" onclick="YoNunca.addPlayer()">➕ Agregar jugador</button>
+
+          <div id="y-playerList" style="color: rgba(163,230,53,.95); font-weight:1000; line-height:1.35; word-break:break-word;"></div>
+
+          <div class="row">
+            <div class="stack" style="gap:10px;">
+              <label class="muted" style="font-size:.9rem; font-weight:950;">Cantidad:</label>
+              <select id="y-selQty">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+              </select>
+            </div>
+
+            <div class="stack" style="gap:10px;">
+              <label class="muted" style="font-size:.9rem; font-weight:950;">Turnos:</label>
+              <select id="y-selTurns">
+                <option value="auto" selected>Auto (si hay 2+)</option>
+                <option value="on">Siempre</option>
+                <option value="off">Nunca</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="YoNunca.startGame()">🎮 Iniciar</button>
+            <button class="btn danger" onclick="YoNunca.clearPlayers()">🧹 Limpiar</button>
+          </div>
+        </div>
+
+        <div id="y-scr-game" class="box narrow stack" style="display:none;">
+          <div class="muted center" id="y-uiProgress" style="font-size:.95rem; font-weight:950;"></div>
+
+          <div class="center">
+            <div style="color: var(--accent); font-size:.78rem; text-transform:uppercase; letter-spacing:2px; font-weight:1000;">Yo nunca...</div>
+            <div id="y-uiStatement" style="margin-top:12px; font-size:1.45rem; min-height:150px; display:flex; align-items:center; justify-content:center; line-height:1.35; font-weight:1100;"></div>
+            <div id="y-uiCurrentPlayer" style="margin-top:12px; color: rgba(34,197,94,.95); font-weight:1000; font-style:italic;"></div>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="YoNunca.next()">➡️ Siguiente</button>
+            <button class="btn danger" onclick="YoNunca.end()">🧯 Terminar</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer id="globalFooter"></footer>
+
+  <script>
+    /********************
+     * PWA MANIFEST
+     ********************/
+    (function(){
+      const manifestData = {
+        name: "Juegos Avila Mora",
+        short_name: "Juegos",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#070A12",
+        theme_color: "#7c3aed",
+        icons: [{
+          src: "https://cdn.jsdelivr.net/npm/emoji-datasource-google/img/google/256/1f9e0.png",
+          sizes: "256x256",
+          type: "image/png"
+        }]
+      };
+      const blob = new Blob([JSON.stringify(manifestData)], {type:"application/manifest+json"});
+      document.getElementById("pwa-manifest").setAttribute("href", URL.createObjectURL(blob));
+    })();
+
+    /********************
+     * FOOTER
+     ********************/
+    document.getElementById("globalFooter").innerText =
+      `Hecho con mucho amor | Familia Avila Mora | ${new Date().getFullYear()}`;
+
+    /********************
+     * NAV (hamburger)
+     ********************/
+    const Nav = (() => {
+      const btn = document.getElementById("navToggle");
+      const panel = document.getElementById("siteNav");
+
+      function firstItem(){ return panel.querySelector(".nav-item"); }
+
+      function open(){
+        panel.hidden = false;
+        panel.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+        setTimeout(() => firstItem()?.focus(), 0);
+      }
+      function close(){
+        panel.classList.remove("open");
+        btn.setAttribute("aria-expanded", "false");
+        panel.hidden = true;
+        setTimeout(() => btn.focus(), 0);
+      }
+      function toggle(){
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        expanded ? close() : open();
+      }
+
+      btn.addEventListener("click", toggle);
+      window.addEventListener("keydown", (e) => { if(e.key === "Escape") close(); });
+
+      document.addEventListener("click", (e) => {
+        const isDesktop = window.matchMedia("(min-width: 860px)").matches;
+        if(isDesktop) return;
+        if(panel.hidden) return;
+        if(panel.contains(e.target) || btn.contains(e.target)) return;
+        close();
+      });
+
+      return { open, close, toggle };
+    })();
+    window.Nav = Nav;
+
+    /********************
+     * SUITE NAV (persist last section + titles)
+     ********************/
+    const SUITE_LAST_KEY = "suite_last_section_v2";
+
+    const Suite = {
+      go(where){
+        const ids = ["menu","aconocernos","impostor","yonunca"];
+        ids.forEach(x => document.getElementById("sec-"+x).classList.remove("active"));
+        document.getElementById("sec-"+where).classList.add("active");
+        window.scrollTo(0,0);
+
+        try{ localStorage.setItem(SUITE_LAST_KEY, where); }catch(e){}
+
+        const titles = {
+          menu: "Juegos Avila Mora 🎮",
+          aconocernos: "A conocernos! 🧠",
+          impostor: "El impostor 🕵️",
+          yonunca: "Yo nunca 🙊"
+        };
+        document.title = titles[where] || "Juegos Avila Mora 🎮";
+
+        if(where === "impostor") Impostor.onEnter();
+        if(where === "aconocernos") AConocernos.onEnter();
+        if(where === "yonunca") YoNunca.onEnter();
+      }
+    };
+    window.Suite = Suite;
+
+    /********************
+     * A CONOCERNOS (200)
+     ********************/
+    const AConocernos = (() => {
+      const STORAGE_KEY_PLAYERS = "aconocernos_players_v4";
+
+      const QUESTIONS_DB = [
+        /* (200 preguntas exactas, sin repetir) */
+        {cat:"Divertidas", q:"¿Cuál es el apodo más ridículo que has tenido?"},
+        {cat:"Divertidas", q:"¿Cuál es el video más vergonzoso que has visto en YouTube?"},
+        {cat:"Divertidas", q:"¿Alguna vez fingiste una enfermedad para faltar a clase o trabajo?"},
+        {cat:"Divertidas", q:"¿Cuál es tu baile más prohibido?"},
+        {cat:"Divertidas", q:"¿Qué es lo más raro que has comido por apuesta?"},
+        {cat:"Divertidas", q:"¿Alguna vez te quedaste atrapado en un lugar donde no debías estar?"},
+        {cat:"Divertidas", q:"¿Cuál es tu placer culposo en música?"},
+        {cat:"Divertidas", q:"¿Alguna vez le hablaste a un extraño creyendo que era un amigo?"},
+        {cat:"Divertidas", q:"¿Cuál es la peor compra que has hecho en tu vida?"},
+        {cat:"Divertidas", q:"Si fueras un meme, ¿cuál serías y por qué?"},
+        {cat:"Divertidas", q:"¿Alguna vez intentaste un truco de magia y salió terrible?"},
+        {cat:"Divertidas", q:"¿Cuál es la mentira más tonta que dijiste y te creyeron?"},
+        {cat:"Divertidas", q:"¿Qué es lo más extraño que has guardado en tu cartera o bolsillo?"},
+        {cat:"Divertidas", q:"¿Alguna vez te reíste en el peor momento posible (momento serio)?"},
+        {cat:"Divertidas", q:"¿Qué es lo más raro que has dicho estando medio dormido?"},
+        {cat:"Divertidas", q:"¿Alguna vez intentaste cocinar y terminaste pidiendo comida a domicilio?"},
+        {cat:"Divertidas", q:"¿Cuál ha sido tu peor corte de pelo?"},
+        {cat:"Divertidas", q:"¿Alguna vez te chocaste con una puerta de vidrio?"},
+        {cat:"Divertidas", q:"¿Cuál fue el peor mensaje que mandaste a la persona equivocada?"},
+        {cat:"Divertidas", q:"¿Cuál fue tu caída en público más memorable?"},
+        {cat:"Divertidas", q:"¿Cuál es tu canción de karaoke por excelencia?"},
+        {cat:"Divertidas", q:"¿Cuál es tu emoji más usado últimamente?"},
+        {cat:"Divertidas", q:"¿Cuál es tu app más adictiva (la que más abres)?"},
+        {cat:"Divertidas", q:"¿Cuál fue la travesura más inocente que hiciste de niño?"},
+        {cat:"Divertidas", q:"¿Qué broma te ha hecho reír más en tu vida?"},
+        {cat:"Divertidas", q:"¿Cuál ha sido tu peor “cringe” personal (y hoy te da risa)?"},
+        {cat:"Divertidas", q:"¿Cuál fue tu peor excusa por llegar tarde?"},
+        {cat:"Divertidas", q:"¿Qué cosa inútil compraste por internet y te arrepientes?"},
+        {cat:"Divertidas", q:"¿Qué canción te cacharon cantando con demasiada pasión?"},
+        {cat:"Divertidas", q:"¿Qué imitación haces demasiado bien (persona, acento o sonido)?"},
+        {cat:"Divertidas", q:"¿Cuál fue el malentendido más gracioso por autocorrector?"},
+        {cat:"Divertidas", q:"¿Qué comida odias pero finges que te gusta para convivir?"},
+        {cat:"Divertidas", q:"Si tu vida fuera un título de YouTube hoy, ¿cómo se llamaría?"},
+        {cat:"Divertidas", q:"¿Qué sonido haces cuando te asustan de sorpresa?"},
+        {cat:"Divertidas", q:"¿Cuál es la superstición más rara que has seguido alguna vez?"},
+        {cat:"Divertidas", q:"¿Qué cosa súper random guardas en tus notas del celular?"},
+        {cat:"Divertidas", q:"¿Cuál es tu “hack” más chafa pero que juras que funciona?"},
+        {cat:"Divertidas", q:"¿Cuál ha sido tu peor “casi me muero de pena” en una reunión?"},
+        {cat:"Divertidas", q:"¿Qué reto tonto aceptaste solo por presión social?"},
+        {cat:"Divertidas", q:"Si fueras un personaje de sitcom, ¿cuál sería tu “rol”?"},
+        {cat:"Curiosidades", q:"¿Cuál es el talento inútil que tienes?"},
+        {cat:"Curiosidades", q:"¿Qué objeto salvarías primero si tu casa se incendiara (después de personas/mascotas)?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu costumbre más extraña al dormir?"},
+        {cat:"Curiosidades", q:"¿Qué es lo primero que haces al llegar a casa?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu olor favorito?"},
+        {cat:"Curiosidades", q:"Si pudieras viajar en el tiempo, ¿a qué época irías?"},
+        {cat:"Curiosidades", q:"¿Cuál es el sueño más loco que recuerdas?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu comida rápida favorita?"},
+        {cat:"Curiosidades", q:"¿Qué es lo más aventurero que has hecho?"},
+        {cat:"Curiosidades", q:"¿Qué habilidad te gustaría aprender este año?"},
+        {cat:"Curiosidades", q:"¿Cuál es el sitio web que más visitas?"},
+        {cat:"Curiosidades", q:"Si pudieras vivir dentro de una película, ¿cuál elegirías?"},
+        {cat:"Curiosidades", q:"¿Cuál es el sonido que más te molesta?"},
+        {cat:"Curiosidades", q:"Si pudieras tener un superpoder inútil, ¿cuál sería?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu palabra favorita en otro idioma?"},
+        {cat:"Curiosidades", q:"¿Qué es lo que más te gusta coleccionar (o te gustaría coleccionar)?"},
+        {cat:"Curiosidades", q:"¿Cuál sería tu mañana perfecta (sin prisas)?"},
+        {cat:"Curiosidades", q:"¿Qué comida podrías comer por el resto de tu vida sin cansarte?"},
+        {cat:"Curiosidades", q:"¿Qué ciudad o lugar te sorprendió más cuando lo visitaste?"},
+        {cat:"Curiosidades", q:"¿Qué habilidad ya tienes y no la valoras lo suficiente?"},
+        {cat:"Curiosidades", q:"¿Qué te hace sentir “en casa” al instante?"},
+        {cat:"Curiosidades", q:"¿De qué tema podrías hablar por horas?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu serie o programa “de comfort”?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu snack favorito de medianoche?"},
+        {cat:"Curiosidades", q:"¿Qué app te gustaría que existiera?"},
+        {cat:"Curiosidades", q:"¿Qué hábito te gustaría robarle a alguien (de los buenos)?"},
+        {cat:"Curiosidades", q:"Si fueras un objeto, ¿cuál serías?"},
+        {cat:"Curiosidades", q:"Si pudieras tener una mascota exótica, ¿cuál elegirías?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu lugar feliz en el mundo (real)?"},
+        {cat:"Curiosidades", q:"¿Qué olor te recuerda más a tu infancia?"},
+        {cat:"Curiosidades", q:"¿Cuál es tu “guilty pleasure” de series o realities?"},
+        {cat:"Curiosidades", q:"¿Qué tipo de clima te pone de buen humor?"},
+        {cat:"Curiosidades", q:"¿Qué canción te mejora el ánimo sí o sí?"},
+        {cat:"Curiosidades", q:"¿Qué miedo irracional tienes (aunque sepas que no tiene sentido)?"},
+        {cat:"Curiosidades", q:"¿Qué aprendizaje te emociona compartir con otros?"},
+        {cat:"Dilemas", q:"¿Preferirías ser rico y aburrido o pobre y divertido?"},
+        {cat:"Dilemas", q:"¿Preferirías viajar al pasado o al futuro?"},
+        {cat:"Dilemas", q:"¿Preferirías no usar redes sociales nunca más o no ver películas nunca más?"},
+        {cat:"Dilemas", q:"¿Preferirías poder hablar con animales o hablar todos los idiomas?"},
+        {cat:"Dilemas", q:"¿Preferirías siempre decir lo que piensas o nunca poder hablar?"},
+        {cat:"Dilemas", q:"¿Preferirías ser famoso por algo tonto o desconocido por algo increíble?"},
+        {cat:"Dilemas", q:"¿Preferirías un botón que hace que todo sea gratis o un botón que arregla cualquier cosa rota?"},
+        {cat:"Dilemas", q:"¿Preferirías vivir en la playa o en una cabaña en la montaña?"},
+        {cat:"Dilemas", q:"¿Preferirías un robot que haga todo por ti o un chef personal?"},
+        {cat:"Dilemas", q:"¿Preferirías una cena con tu ídolo o un viaje gratis a cualquier lugar?"},
+        {cat:"Dilemas", q:"¿Preferirías tener siempre frío o siempre calor?"},
+        {cat:"Dilemas", q:"¿Preferirías ser un genio desconocido o una celebridad ignorante?"},
+        {cat:"Dilemas", q:"¿Preferirías viajar solo o con 10 personas?"},
+        {cat:"Dilemas", q:"¿Preferirías trabajar 12 horas al día y tener fines de semana libres o 4 horas al día sin fines de semana?"},
+        {cat:"Dilemas", q:"¿Preferirías vivir sin música o vivir sin televisión?"},
+        {cat:"Dilemas", q:"¿Preferirías verano eterno o invierno eterno?"},
+        {cat:"Dilemas", q:"¿Preferirías teletransportarte 3 veces al día o volar 10 minutos al día?"},
+        {cat:"Dilemas", q:"¿Preferirías saber la verdad de todo o olvidar lo malo de inmediato?"},
+        {cat:"Dilemas", q:"¿Preferirías ser el más divertido del grupo o el más inteligente?"},
+        {cat:"Dilemas", q:"¿Preferirías poder pausar el tiempo o retroceder 10 segundos cuando quieras?"},
+        {cat:"Dilemas", q:"¿Preferirías ganar la lotería hoy o tener el sueldo duplicado toda la vida?"},
+        {cat:"Dilemas", q:"¿Preferirías no sentir vergüenza nunca o no sentir miedo nunca?"},
+        {cat:"Dilemas", q:"¿Preferirías hablar perfecto en público o escribir perfecto siempre?"},
+        {cat:"Dilemas", q:"¿Preferirías memoria fotográfica o dormir 2 horas y descansar igual?"},
+        {cat:"Dilemas", q:"¿Preferirías ser ultra ordenado o ultra creativo?"},
+        {cat:"Dilemas", q:"¿Preferirías no comer dulce nunca más o no comer salado nunca más?"},
+        {cat:"Dilemas", q:"¿Preferirías dejar WhatsApp un año o dejar Instagram un año?"},
+        {cat:"Dilemas", q:"¿Preferirías leer mentes o ser invisible?"},
+        {cat:"Dilemas", q:"¿Preferirías vivir en una ciudad futurista o en un pueblo tranquilo?"},
+        {cat:"Dilemas", q:"¿Preferirías un mejor amigo para siempre o conocer gente nueva todo el tiempo?"},
+        {cat:"Dilemas", q:"¿Preferirías renunciar al café para siempre o renunciar al chocolate para siempre?"},
+        {cat:"Dilemas", q:"¿Preferirías tener un día extra libre a la semana o 2 horas extra libres al día?"},
+        {cat:"Dilemas", q:"¿Preferirías repetir un día feliz o borrar un día triste?"},
+        {cat:"Dilemas", q:"¿Preferirías ser famoso en internet o ser famoso en tu ciudad?"},
+        {cat:"Dilemas", q:"¿Preferirías no volver a limpiar nunca o no volver a cocinar nunca?"},
+        {cat:"Dilemas", q:"¿Preferirías comunicarte solo con memes o solo con audios?"},
+        {cat:"Dilemas", q:"¿Preferirías vivir sin aire acondicionado o vivir sin agua caliente?"},
+        {cat:"Dilemas", q:"¿Preferirías llegar 30 minutos temprano a todo o 10 minutos tarde a todo?"},
+        {cat:"Dilemas", q:"¿Preferirías tener suerte con el dinero o suerte con tus proyectos?"},
+        {cat:"Dilemas", q:"¿Preferirías aprender cualquier idioma en 1 semana o cualquier instrumento en 1 semana?"},
+        {cat:"Dilemas", q:"¿Preferirías cambiar tu pasado una sola vez o ver tu futuro una sola vez?"},
+        {cat:"Dilemas", q:"¿Preferirías batería al 100% siempre o wifi perfecto siempre?"},
+        {cat:"Dilemas", q:"¿Preferirías comer sin engordar o dormir sin despertador y siempre descansar?"},
+        {cat:"Dilemas", q:"¿Preferirías vivir sin celular o vivir sin computadora?"},
+        {cat:"Dilemas", q:"¿Preferirías saber cuándo llegará tu próxima gran oportunidad o saber cuándo será tu descanso perfecto?"},
+        {cat:"Vida y amigos", q:"¿Qué fue lo primero que pensaste cuando conociste a la persona a tu derecha?"},
+        {cat:"Vida y amigos", q:"¿Qué es lo que más valoras de nuestra amistad?"},
+        {cat:"Vida y amigos", q:"¿Qué es lo que más te hace reír del grupo?"},
+        {cat:"Vida y amigos", q:"¿Cuál es tu recuerdo favorito con nosotros?"},
+        {cat:"Vida y amigos", q:"¿Qué actividad deberíamos hacer como grupo que nunca hemos hecho?"},
+        {cat:"Vida y amigos", q:"¿Cuál es la palabra que mejor nos define como grupo?"},
+        {cat:"Vida y amigos", q:"¿Qué te gusta más de la personalidad de alguien del grupo (sin decir quién)?"},
+        {cat:"Vida y amigos", q:"¿Alguna vez tuvimos un malentendido que hoy te da risa?"},
+        {cat:"Vida y amigos", q:"¿Cuál es el mejor consejo que te ha dado alguien del grupo?"},
+        {cat:"Vida y amigos", q:"¿Qué es lo más loco que hemos hecho juntos?"},
+        {cat:"Vida y amigos", q:"¿Quién del grupo es más probable que te salve en un apocalipsis zombi?"},
+        {cat:"Vida y amigos", q:"¿Quién del grupo es más probable que pierda las llaves del auto?"},
+        {cat:"Vida y amigos", q:"¿Qué parte de la personalidad de un amigo te gustaría tener?"},
+        {cat:"Vida y amigos", q:"¿Quién del grupo es el más organizado?"},
+        {cat:"Vida y amigos", q:"¿Quién del grupo es el más despistado?"},
+        {cat:"Vida y amigos", q:"¿Quién sería el mejor presidente del grupo (por qué)?"},
+        {cat:"Vida y amigos", q:"¿Qué regalo le harías a todos los del grupo si pudieras?"},
+        {cat:"Vida y amigos", q:"¿Quién del grupo es el más puntual?"},
+        {cat:"Vida y amigos", q:"¿Quién sería el mejor planeando un viaje para todos?"},
+        {cat:"Vida y amigos", q:"¿Quién se ríe más fuerte (o más contagioso)?"},
+        {cat:"Vida y amigos", q:"¿Qué tradición deberíamos crear como grupo?"},
+        {cat:"Vida y amigos", q:"¿Qué canción crees que nos representa como grupo?"},
+        {cat:"Vida y amigos", q:"¿Qué momento del grupo te hizo sentir más apoyado?"},
+        {cat:"Vida y amigos", q:"¿Qué comida sí o sí deberíamos compartir en una reunión?"},
+        {cat:"Vida y amigos", q:"Si el grupo tuviera un apodo oficial, ¿cuál sería?"},
+        {cat:"Vida y amigos", q:"¿Quién sería el mejor compañero para un reality show?"},
+        {cat:"Vida y amigos", q:"¿Qué cosa podríamos mejorar como grupo para estar más unidos?"},
+        {cat:"Vida y amigos", q:"Si pudieras asignar un superpoder a cada uno, ¿cuál le darías a alguien del grupo?"},
+        {cat:"Vida y amigos", q:"¿Quién es más probable que inicie un emprendimiento exitoso?"},
+        {cat:"Vida y amigos", q:"Si hiciéramos un viaje todos, ¿a dónde iríamos y por qué?"},
+        {cat:"Aleatorias", q:"¿Cuál es el animal que más se parece a ti?"},
+        {cat:"Aleatorias", q:"Si tuvieras 24 horas libres sin responsabilidades, ¿qué harías primero?"},
+        {cat:"Aleatorias", q:"¿Cuál es tu palabra favorita y por qué?"},
+        {cat:"Aleatorias", q:"Si pudieras cambiar una ley del país, ¿cuál cambiarías?"},
+        {cat:"Aleatorias", q:"¿Cuál es el programa de TV que más has repetido?"},
+        {cat:"Aleatorias", q:"¿Prefieres café o té?"},
+        {cat:"Aleatorias", q:"¿Cuál es tu estación del año favorita?"},
+        {cat:"Aleatorias", q:"¿Qué haces para relajarte cuando estás estresado?"},
+        {cat:"Aleatorias", q:"¿Cuál es tu videojuego favorito de la infancia?"},
+        {cat:"Aleatorias", q:"¿Qué es lo más random que has buscado en Google?"},
+        {cat:"Aleatorias", q:"¿Cuál es tu superhéroe favorito y por qué?"},
+        {cat:"Aleatorias", q:"¿Qué prefieres: mar o piscina?"},
+        {cat:"Aleatorias", q:"¿Qué tipo de música escuchas para hacer ejercicio?"},
+        {cat:"Aleatorias", q:"¿Cuál es el mejor postre que has probado?"},
+        {cat:"Aleatorias", q:"¿Qué país te gustaría visitar y qué harías ahí primero?"},
+        {cat:"Aleatorias", q:"¿Qué libro crees que todos deberían leer al menos una vez?"},
+        {cat:"Aleatorias", q:"¿Qué es lo que más te gusta de tu ciudad?"},
+        {cat:"Aleatorias", q:"¿Qué hobby te gustaría retomar o empezar?"},
+        {cat:"Aleatorias", q:"¿Qué comida pides casi siempre cuando comes fuera?"},
+        {cat:"Aleatorias", q:"¿Qué objeto siempre llevas contigo (sí o sí)?"},
+        {cat:"Aleatorias", q:"¿Qué platillo te gustaría aprender a cocinar perfecto?"},
+        {cat:"Aleatorias", q:"¿Qué canción pondrías para un viaje en carretera?"},
+        {cat:"Aleatorias", q:"¿Cuál es el mejor consejo que te has dado a ti mismo?"},
+        {cat:"Aleatorias", q:"¿Qué película podrías ver mil veces sin cansarte?"},
+        {cat:"Aleatorias", q:"Si tuvieras un botón en tu casa, ¿qué haría ese botón?"},
+        {cat:"Profundas", q:"¿Qué es lo que te mantiene despierto por la noche?"},
+        {cat:"Profundas", q:"¿Qué es la felicidad para ti?"},
+        {cat:"Profundas", q:"¿Cuál es un miedo que has superado?"},
+        {cat:"Profundas", q:"¿Qué es algo que te hace sentir orgulloso de ti?"},
+        {cat:"Profundas", q:"¿Qué es algo que cambiarías de tu rutina diaria?"},
+        {cat:"Profundas", q:"¿Qué es algo que siempre quisiste decir pero no te atreviste?"},
+        {cat:"Profundas", q:"¿Qué lección de vida te enseñó tu familia?"},
+        {cat:"Profundas", q:"¿Qué esperas lograr en los próximos 5 años?"},
+        {cat:"Profundas", q:"¿Qué te hace sentir más amado?"},
+        {cat:"Profundas", q:"¿Qué es algo que te hace sentir vivo?"},
+        {cat:"Profundas", q:"¿Qué es algo que aprendiste tarde en la vida?"},
+        {cat:"Profundas", q:"¿Qué es lo que más te motiva a levantarte cada día?"},
+        {cat:"Profundas", q:"¿Qué te hace confiar en alguien?"},
+        {cat:"Profundas", q:"¿Qué valor personal no negocias por nada?"},
+        {cat:"Profundas", q:"¿Qué te gustaría perdonarte a ti mismo?"},
+        {cat:"Profundas", q:"¿Qué hábito te gustaría construir de aquí a un año?"},
+        {cat:"Profundas", q:"¿En qué momento reciente te sentiste valiente?"},
+        {cat:"Profundas", q:"¿Qué te gustaría que la gente recordara de ti?"},
+        {cat:"Profundas", q:"¿Qué te da paz cuando todo va demasiado rápido?"},
+        {cat:"Profundas", q:"¿Qué conversación pendiente te gustaría tener algún día?"},
+        {cat:"Profundas", q:"¿Qué cosa te gustaría agradecer más seguido?"},
+        {cat:"Profundas", q:"¿Cuál fue un cambio que te hizo crecer mucho?"},
+        {cat:"Profundas", q:"¿Qué significa el éxito para ti hoy?"},
+        {cat:"Profundas", q:"¿Qué pequeño logro estás celebrando últimamente?"},
+        {cat:"Profundas", q:"¿Qué mensaje le darías al mundo si todos te escucharan?"}
+      ];
+
+      let players = [];
+      let totalToPlay = 0, playedCount = 0;
+      let deck = [], deckPos = 0;
+      let lastPlayerIndex = -1;
+
+      const $ = (id) => document.getElementById(id);
+
+      function shuffleArray(arr){
+        for(let i=arr.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [arr[i],arr[j]] = [arr[j],arr[i]];
+        }
+        return arr;
+      }
+      function renderPlayers(){
+        const el = $("a-playerList");
+        el.textContent = players.length ? "👥 " + players.join(", ") : "👥 Agrega al menos 2 jugadores.";
+      }
+      function savePlayers(){
+        localStorage.setItem(STORAGE_KEY_PLAYERS, JSON.stringify(players));
+        renderPlayers();
+      }
+      function loadPlayers(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY_PLAYERS);
+          if(raw){ const arr = JSON.parse(raw); if(Array.isArray(arr)) players = arr; }
+        }catch(e){}
+        renderPlayers();
+      }
+      function pickNextPlayer(){
+        if(players.length === 0) return "";
+        if(players.length === 1){ lastPlayerIndex = 0; return players[0]; }
+        let idx; do { idx = Math.floor(Math.random()*players.length); } while(idx === lastPlayerIndex);
+        lastPlayerIndex = idx; return players[idx];
+      }
+
+      function addPlayer(){
+        const input = $("a-inpName");
+        const name = (input.value||"").trim();
+        if(!name) return;
+        if(players.some(p => p.toLowerCase() === name.toLowerCase())){ input.value=""; return; }
+        players.push(name); input.value=""; savePlayers();
+      }
+
+      function startGame(){
+        if(players.length < 2) return alert("Necesitan al menos 2 personas.");
+        const val = parseInt($("a-selQty").value,10);
+        totalToPlay = Math.min(val, QUESTIONS_DB.length);
+        playedCount = 0; lastPlayerIndex = -1;
+        deck = shuffleArray([...Array(QUESTIONS_DB.length).keys()]).slice(0, totalToPlay);
+        deckPos = 0;
+        $("a-scr-game").style.display = "block";
+        nextQuestion();
+      }
+
+      function nextQuestion(){
+        if(playedCount >= totalToPlay){
+          alert("¡Sesión finalizada!");
+          endSession(true);
+          return;
+        }
+        const idx = deck[deckPos++];
+        playedCount++;
+        $("a-uiProgress").textContent = `Pregunta ${playedCount} de ${totalToPlay}`;
+        $("a-uiCat").textContent = QUESTIONS_DB[idx].cat;
+        $("a-uiQuestion").textContent = QUESTIONS_DB[idx].q;
+        $("a-uiCurrentPlayer").textContent = `Le toca: ${pickNextPlayer()}`;
+      }
+
+      function endSession(silent=false){
+        $("a-scr-game").style.display = "none";
+        playedCount = 0; totalToPlay = 0; deck = []; deckPos = 0;
+        if(!silent) alert("Sesión terminada.");
+      }
+
+      function clearPlayers(){
+        if(!confirm("¿Borrar jugadores de A conocernos?")) return;
+        players = [];
+        try{ localStorage.removeItem(STORAGE_KEY_PLAYERS); }catch(e){}
+        renderPlayers();
+        endSession(true);
+      }
+
+      function onEnter(){
+        renderPlayers();
+      }
+
+      loadPlayers();
+      return { addPlayer, startGame, nextQuestion, endSession, clearPlayers, onEnter };
+    })();
+    window.AConocernos = AConocernos;
+
+    /********************
+     * IMPOSTOR (tu lógica intacta)
+     ********************/
+    const Impostor = (() => {
+      if ('serviceWorker' in navigator) {
+        const swCode = "self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => {});";
+        const blob = new Blob([swCode], {type: 'application/javascript'});
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+      }
+
+      // BASE DE DATOS (exactamente tuya)
+      const WORDS_DATABASE = {
+        "Naturaleza": [
+          ["🍎","Manzana"],["🍌","Banano"],["🍓","Fresa"],["🍉","Sandía"],["🍇","Uva"],["🍍","Piña"],["🥭","Mango"],["🍊","Naranja"],["🍋","Limón"],["🍒","Cereza"],["🍑","Durazno"],["🥝","Kiwi"],["🥑","Aguacate"],["🍅","Tomate"],["🥕","Zanahoria"],["🥦","Brócoli"],["🌽","Maíz"],["🥔","Papa"],["🧅","Cebolla"],["🧄","Ajo"],["🥒","Pepino"],["🥬","Lechuga"],["🌶️","Ají"],["🍄","Champiñón"],["🥥","Coco"],["🍈","Melón"],["🍐","Pera"],["🍆","Berenjena"],["🎃","Calabaza"],["🥜","Maní"],
+          ["🦁","León"],["🐯","Tigre"],["🐻","Oso"],["🐼","Panda"],["🐨","Koala"],["🦊","Zorro"],["🐺","Lobo"],["🐵","Mono"],["🦍","Gorila"],["🐘","Elefante"],["🦏","Rinoceronte"],["🦛","Hipopótamo"],["🦒","Jirafa"],["🦓","Cebra"],["🦌","Ciervo"],["🐗","Jabalí"],["🐪","Camello"],["🦙","Llama"],["🦘","Canguro"],["🐆","Leopardo"],["🐎","Caballo"],["🐖","Cerdo"],["🐄","Vaca"],["🐑","Oveja"],["🐐","Cabra"],["🐕","Perro"],["🐈","Gato"],["🐇","Conejo"],["🐭","Ratón"],["🦡","Tejón"],["🐿️","Ardilla"],["🦔","Erizo"],
+          ["🦅","Águila"],["🦉","Búho"],["🦆","Pato"],["🐧","Pingüino"],["🐦","Pájaro"],["🐓","Gallo"],["🕊️","Paloma"],["🦩","Flamenco"],["🦈","Tiburón"],["🐬","Delfín"],["🐳","Ballena"],["🐙","Pulpo"],["🦑","Calamar"],["🦞","Langosta"],["🦀","Cangrejo"],["🐢","Tortuga"],["🐊","Cocodrilo"],["🐸","Rana"],["🐍","Serpiente"],["🦇","Murciélago"],["🦋","Mariposa"],["🐝","Abeja"],["🐞","Mariquita"],["🐜","Hormiga"],["🦟","Mosquito"],["🦂","Escorpión"],["🐚","Caracol"],
+          ["☀️","Sol"],["☁️","Nube"],["🌧️","Lluvia"],["⛈️","Tormenta"],["🌩️","Rayo"],["❄️","Nieve"],["💨","Viento"],["🌪️","Tornado"],["🌈","Arcoíris"],["🌊","Ola"],["🔥","Fuego"],["🪵","Tronco"],["🌵","Cactus"],["🌲","Pino"],["🍁","Hoja"],["🍀","Trébol"],["🌹","Rosa"],["🌻","Girasol"],["🌱","Planta"]
+        ],
+        "Cosas": [
+          ["⚽","Fútbol"],["🏀","Baloncesto"],["⚾","Béisbol"],["🥎","Sóftbol"],["🎾","Tenis"],["🏐","Voleibol"],["🏉","Rugby"],["🥏","Frisbee"],["🏒","Hockey"],["🥊","Boxeo"],["🥋","Karate"],["🎣","Pesca"],["🤿","Buceo"],["⛳","Golf"],["🎿","Esquí"],["🚴","Ciclismo"],["🧗","Escalada"],["🤸","Gimnasia"],["🎳","Bolos"],["🎯","Dardos"],["♟️","Ajedrez"],["🎮","Videojuegos"],["💃","Baile"],["🏊","Natación"],
+          ["🪑","Silla"],["🛋️","Sofá"],["🛏️","Cama"],["🚪","Puerta"],["🪟","Ventana"],["🪑","Mesa"],["📺","Televisor"],["📻","Radio"],["💻","Computadora"],["⏰","Reloj"],["💡","Bombillo"],["🕯️","Vela"],["🔑","Llave"],["🪞","Espejo"],["🧼","Jabón"],["🧹","Escoba"],["🪣","Balde"],["📦","Caja"],["🖼️","Cuadro"],["📚","Libro"],["🍽️","Plato"],["🍴","Tenedor"],["🥄","Cuchara"],["🔪","Cuchillo"],["🥛","Vaso"],["☕","Taza"],["🍳","Sartén"],["⏰","Alarma"],["🪮","Peineta"],
+          ["📱","Celular"],["💻","Laptop"],["🖥️","Monitor"],["⌨️","Teclado"],["🖱️","Mouse"],["🖨️","Impresora"],["🎮","Consola"],["🕹️","Joystick"],["🎧","Audífonos"],["🔈","Parlante"],["📷","Cámara"],["🔋","Batería"],["🔌","Enchufe"],["💿","Disco"],["💾","Disquete"],["📡","Antena"],["🛰️","Satélite"],["🎙️","Micrófono"],["🔔","Timbre"],["🌐","Router"],
+          ["🚗","Automóvil"],["🚕","Taxi"],["🚙","Camioneta"],["🚌","Autobús"],["🚓","Patrulla"],["🚑","Ambulancia"],["🚜","Tractor"],["🚲","Bicicleta"],["🛵","Scooter"],["🏍️","Motocicleta"],["🚂","Tren"],["🚇","Metro"],["✈️","Avión"],["🚀","Cohete"],["🚁","Helicóptero"],["⛵","Velero"],["🛥️","Yate"],["🚢","Crucero"],["🛶","Canoa"],["🛸","OVNI"],["🛹","Patineta"],
+          ["🍔","Hamburguesa"],["🍕","Pizza"],["🌮","Taco"],["🥪","Sándwich"],["🥗","Ensalada"],["🍝","Espagueti"],["🍣","Sushi"],["🥟","Empanada"],["🥞","Panqueque"],["🧇","Waffle"],["🧀","Queso"],["🍖","Costilla"],["🥩","Filete"],["🥓","Tocino"],["🍩","Dona"],["🍪","Galleta"],["🎂","Pastel"],["🍦","Helado"],["🍫","Chocolate"],["🍬","Dulce"],["🍯","Miel"],["🥛","Leche"],["☕","Café"],["🍵","Té"],["🥤","Gaseosa"],["🧃","Jugo"],
+          ["🎸","Guitarra"],["🎻","Violín"],["🎹","Piano"],["🥁","Batería"],["🎷","Saxofón"],["🎺","Trompeta"],["🪗","Acordeón"],["🪕","Banjo"],["🪈","Flauta"],["🪇","Maracas"],["🪕","Arpa"],["🔔","Campana"],["📣","Megáfono"],
+          ["🏥","Hospital"],["🏫","Escuela"],["🏦","Banco"],["🏨","Hotel"],["🏪","Supermercado"],["🏭","Fábrica"],["🏰","Castillo"],["⛪","Iglesia"],["🏟️","Estadio"],["🏖️","Playa"],["🏕️","Campamento"],["🏔️","Montaña"],["🌋","Volcán"],["🏜️","Desierto"],["🏝️","Isla"],["🏞️","Parque"],["🗽","Monumento"],["🎪","Circo"],["🎢","Montaña"],["🍿","Cine"],["⛲","Fuente"],["🏢","Edificio"],["🏘️","Barrio"],["🚢","Puerto"],["✈️","Aeropuerto"]
+        ],
+        "Humanidad": [
+          ["👨‍⚕️","Médico"],["👨‍🎓","Estudiante"],["👨‍🏫","Profesor"],["👨‍⚖️","Juez"],["👨‍🌾","Agricultor"],["👨‍🍳","Chef"],["👨‍🔧","Mecánico"],["👨‍🏭","Obrero"],["👨‍💼","Oficinista"],["👨‍🔬","Científico"],["👨‍💻","Programador"],["👨‍🎤","Cantante"],["👨‍🎨","Pintor"],["👨‍🚀","Astronauta"],["👨‍🚒","Bombero"],["👮","Policía"],["🕵️","Detective"],["💂","Guardia"],["👷","Constructor"],["🤵","Mesero"],["💇","Peluquero"],["✈️","Piloto"],["👨‍🎨","Diseñador"],["💼","Abogado"],["📸","Fotógrafo"],["🦷","Dentista"],["🪵","Carpintero"],["🧱","Albañil"],["🧼","Conserje"],["🛟","Salvavidas"],["✍️","Escritor"],["🎙️","Locutor"],
+          ["👕","Camiseta"],["👔","Camisa"],["👚","Blusa"],["👖","Pantalón"],["🩳","Pantaloneta"],["🧥","Abrigo"],["👗","Vestido"],["🧦","Medias"],["👟","Tenis"],["👠","Tacones"],["🥾","Botas"],["👑","Corona"],["👒","Sombrero"],["🧢","Gorra"],["🎒","Maleta"],["🕶️","Gafas"],["💍","Anillo"],["💼","Maletín"],["🪭","Abanico"],["🧣","Bufanda"],["🧤","Guantes"],["⌚","Reloj"],["☂️","Sombrilla"],
+          ["🔨","Martillo"],["🪓","Hacha"],["⛏️","Pico"],["🔩","Tornillo"],["⚙️","Engranaje"],["⛓️","Cadena"],["🧲","Imán"],["🔫","Pistola"],["💣","Bomba"],["🧨","Dinamita"],["🪚","Serrucho"],["🔧","Llave"],["🪛","Destornillador"],["🪜","Escalera"],["🧰","Caja"],["📐","Escuadra"],["📏","Regla"],["🪝","Gancho"],["🧪","Tubo"],["🔬","Microscopio"],["🔭","Telescopio"],
+          ["💵","Billete"],["🪙","Moneda"],["💳","Tarjeta"],["💎","Diamante"],["💰","Bolsa"],["🐷","Alcancía"],["📉","Pérdida"],["📈","Ganancia"],["🧾","Recibo"],["📫","Buzón"],["🔒","Candado"],
+          ["🔮","Bola"],["🪄","Varita"],["🧬","Cadena"],["🛡️","Escudo"],["⚔️","Espada"],["🏺","Vasija"],["📿","Rosario"],["💈","Barbería"],["🧸","Peluche"],["🎉","Confeti"],["🎈","Globo"],["🎀","Moño"],
+          ["🧠","Cerebro"],["🫀","Corazón"],["🫁","Pulmón"],["🦷","Diente"],["🦴","Hueso"],["👀","Ojo"],["👂","Oreja"],["👃","Nariz"],["👅","Lengua"],["👄","Boca"],["🩹","Curita"],["🩺","Estetoscopio"],["💊","Pastilla"],["💉","Jeringa"],["🌡️","Termómetro"],
+          ["🚀","Cohete"],["🛰️","Satélite"],["🌍","Planeta"],["🌙","Luna"],["🪐","Saturno"],["⭐","Estrella"],["☄️","Cometa"],["👨‍🚀","Astronauta"],
+          ["✏️","Lápiz"],["✒️","Pluma"],["🖊️","Bolígrafo"],["🖍️","Crayón"],["🖌️","Pincel"],["📝","Nota"],["📁","Carpeta"],["📅","Calendario"],["📎","Clip"],["📌","Chincheta"],["✂️","Tijeras"],["📓","Cuaderno"]
+        ]
+      };
+
+      let players = JSON.parse(sessionStorage.getItem('impostor_players')) || [];
+      let usedWords = JSON.parse(sessionStorage.getItem('impostor_used_words')) || [];
+
+      let gameRoles = [];
+      let currentPIndex = 0;
+      let selectedCategory = "";
+      let selectedWordPair = [];
+      let speakerIndex = 0;
+      let timerId = null;
+      let secondsLeft = 0;
+      let timerActive = false;
+
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function emitSound(frequency, duration, waveType = 'sine') {
+        try {
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = waveType;
+          osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+          osc.stop(audioCtx.currentTime + duration);
+        } catch(e) {}
+      }
+
+      function saveData() {
+        sessionStorage.setItem('impostor_players', JSON.stringify(players));
+        sessionStorage.setItem('impostor_used_words', JSON.stringify(usedWords));
+      }
+
+      function $(id){ return document.getElementById(id); }
+
+      function refreshLobbyUI() {
+        const container = $("i-uiPlayerList");
+        container.innerHTML = "";
+        players.forEach(p => {
+          container.innerHTML += `<div class="player-tag">👤 ${p}<span class="delete-btn" onclick="Impostor.removePlayer('${p}')">×</span></div>`;
+        });
+      }
+
+      function changeScreen(screenId) {
+        document.querySelectorAll('.im-screen').forEach(s => s.classList.remove('active'));
+        $(screenId).classList.add('active');
+        window.scrollTo(0,0);
+      }
+
+      function addPlayer() {
+        const input = $("i-inpName");
+        const name = input.value.trim().toUpperCase();
+        if (name && !players.includes(name)) {
+          players.push(name);
+          input.value = "";
+          emitSound(550, 0.08);
+          refreshLobbyUI();
+          saveData();
+        }
+      }
+
+      function removePlayer(name) {
+        players = players.filter(p => p !== name);
+        emitSound(300, 0.1, 'triangle');
+        refreshLobbyUI();
+        saveData();
+      }
+
+      function clearPlayers(){
+        if(!confirm("¿Borrar jugadores del impostor?")) return;
+        players = [];
+        usedWords = [];
+        try{
+          sessionStorage.removeItem('impostor_players');
+          sessionStorage.removeItem('impostor_used_words');
+        }catch(e){}
+        refreshLobbyUI();
+        changeScreen("i-scr-lobby");
+      }
+
+      function initGame() {
+        const imposterLimit = parseInt($("i-selImposters").value);
+        if (players.length < 3) return alert("Se necesitan por lo menos 3 jugadores.");
+        if (imposterLimit >= players.length) return alert("Demasiados impostores para la cantidad de jugadores.");
+
+        const categories = Object.keys(WORDS_DATABASE);
+        selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+
+        let availableWords = WORDS_DATABASE[selectedCategory].filter(pair => !usedWords.includes(pair[1]));
+
+        if (availableWords.length === 0) {
+          let foundCat = false;
+          for (let cat of categories) {
+            let av = WORDS_DATABASE[cat].filter(pair => !usedWords.includes(pair[1]));
+            if (av.length > 0) {
+              selectedCategory = cat;
+              availableWords = av;
+              foundCat = true;
+              break;
+            }
+          }
+          if (!foundCat) {
+            alert("¡Usaron todas las palabras! Se reiniciará la memoria.");
+            usedWords = [];
+            availableWords = WORDS_DATABASE[selectedCategory];
+          }
+        }
+
+        selectedWordPair = availableWords[Math.floor(Math.random() * availableWords.length)];
+        usedWords.push(selectedWordPair[1]);
+        saveData();
+
+        gameRoles = Array(players.length).fill("CIUDADANO");
+        let assigned = 0;
+        while(assigned < imposterLimit) {
+          let rIndex = Math.floor(Math.random() * players.length);
+          if(gameRoles[rIndex] !== "IMPOSTOR") {
+            gameRoles[rIndex] = "IMPOSTOR";
+            assigned++;
+          }
+        }
+
+        speakerIndex = Math.floor(Math.random() * players.length);
+        currentPIndex = 0;
+        secondsLeft = parseInt($("i-selTime").value);
+
+        emitSound(440, 0.15, 'square');
+        setTimeout(() => emitSound(660, 0.2, 'square'), 120);
+        goToPassPhase();
+      }
+
+      function goToPassPhase() {
+        $("i-txtPassName").innerText = players[currentPIndex];
+        changeScreen("i-scr-pass");
+      }
+
+      function revealRole() {
+        $("i-txtRevealPlayer").innerText = players[currentPIndex];
+        const area = $("i-uiSecretArea");
+        const isImposter = (gameRoles[currentPIndex] === "IMPOSTOR");
+
+        emitSound(750, 0.08);
+
+        if (isImposter) {
+          let reco = (currentPIndex === speakerIndex) ?
+            `<div class="box" style="margin-top:15px; border-color: rgba(255,204,0,.35); background: rgba(255,204,0,.08);">
+              <div class="label-muted" style="color: var(--warning);">⚠️ ¡TE TOCA EMPEZAR!</div>
+              <p class="muted" style="font-weight:800;">Inventa una palabra de esta categoría para disimular.</p>
+            </div>` : "";
+
+          area.innerHTML = `
+            <div class="emoji-display">😈</div>
+            <h2 style="color: var(--danger); font-size: 2.0rem; font-weight:1200;">ERES EL IMPOSTOR</h2>
+            <p class="muted" style="margin-top: 8px; font-weight:800;">Categoría secreta:</p>
+            <p style="font-size: 1.5rem; font-weight: 1100; color: white; margin-top:5px;">${selectedCategory}</p>
+            ${reco}
+          `;
+        } else {
+          area.innerHTML = `
+            <div class="emoji-display">${selectedWordPair[0]}</div>
+            <p class="muted" style="font-size: 1rem; font-weight:800;">Tu palabra es:</p>
+            <h2 style="color: var(--primary); font-size: 2.3rem; font-weight: 1200; margin: 5px 0;">${selectedWordPair[1]}</h2>
+            <p class="muted" style="font-size: 0.9rem; font-weight:800;">Categoría: ${selectedCategory}</p>
+          `;
+        }
+        changeScreen("i-scr-reveal");
+      }
+
+      function confirmAndNext() {
+        currentPIndex++;
+        emitSound(250, 0.05);
+        if(currentPIndex < players.length) goToPassPhase();
+        else startDiscussionPhase();
+      }
+
+      function startDiscussionPhase() {
+        $("i-txtSpeaker").innerText = players[speakerIndex];
+        $("i-uiTimer").classList.remove("blinking");
+        updateTimerDisplay();
+        changeScreen("i-scr-game");
+
+        emitSound(500, 0.1, 'square');
+        setTimeout(() => emitSound(600, 0.1, 'square'), 100);
+        setTimeout(() => emitSound(800, 0.3, 'square'), 200);
+
+        timerActive = false;
+        toggleTimer();
+      }
+
+      function toggleTimer() {
+        const btn = $("i-btnPause");
+        const display = $("i-uiTimer");
+
+        if (timerActive) {
+          clearInterval(timerId);
+          btn.innerText = "▶ Reanudar";
+          timerActive = false;
+          emitSound(400, 0.1);
+        } else {
+          timerActive = true;
+          btn.innerText = "⏸ Pausar";
+          emitSound(600, 0.1);
+
+          timerId = setInterval(() => {
+            secondsLeft--;
+            updateTimerDisplay();
+
+            if (secondsLeft % 60 === 0 && secondsLeft > 0) {
+              emitSound(600, 0.15, 'square');
+              setTimeout(() => emitSound(800, 0.25, 'square'), 200);
+            }
+
+            if (secondsLeft <= 30 && secondsLeft > 0) {
+              emitSound(1000, 0.05, 'sine');
+              display.classList.add("blinking");
+            } else {
+              display.classList.remove("blinking");
+            }
+
+            if (secondsLeft <= 0) {
+              clearInterval(timerId);
+              timerActive = false;
+              display.classList.remove("blinking");
+              display.innerText = "¡TIEMPO!";
+
+              let count = 0;
+              let alarmId = setInterval(() => {
+                emitSound(count % 2 === 0 ? 800 : 1100, 0.15, 'sawtooth');
+                count++;
+                if(count > 8) {
+                  clearInterval(alarmId);
+                  startVotingPhase();
+                }
+              }, 180);
+            }
+          }, 1000);
+        }
+      }
+
+      function updateTimerDisplay() {
+        if (secondsLeft < 0) return;
+        let m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+        let s = (secondsLeft % 60).toString().padStart(2, '0');
+        const display = $("i-uiTimer");
+        display.innerText = `${m}:${s}`;
+        if (secondsLeft > 30) display.style.color = "var(--warning)";
+      }
+
+      function startVotingPhase() {
+        if(timerActive) { clearInterval(timerId); timerActive = false; }
+        $("i-uiTimer").classList.remove("blinking");
+        emitSound(350, 0.2, 'triangle');
+
+        const listUI = $("i-uiVoteList");
+        listUI.innerHTML = "";
+        players.forEach((p, index) => {
+          listUI.innerHTML += `<button class="vote-btn" onclick="Impostor.accusePlayer(${index})">👤 ${p}</button>`;
+        });
+
+        changeScreen("i-scr-vote");
+      }
+
+      function accusePlayer(playerIndex) {
+        const accusedName = players[playerIndex];
+        const isImposter = (gameRoles[playerIndex] === "IMPOSTOR");
+
+        let realImposters = [];
+        players.forEach((p, idx) => { if(gameRoles[idx] === "IMPOSTOR") realImposters.push(p); });
+
+        const title = $("i-txtResultTitle");
+        const area = $("i-uiResultArea");
+
+        if (isImposter) {
+          title.innerText = "¡ATRAPADO! 🎉";
+          title.style.color = "var(--primary)";
+          area.innerHTML = `
+            <div class="emoji-display">😈</div>
+            <h2 style="color: var(--primary); margin-bottom: 5px;">${accusedName}</h2>
+            <h3 style="color: white; margin-bottom: 18px;">ERA EL IMPOSTOR</h3>
+            <p class="muted" style="font-weight:800;">La palabra era:</p>
+            <h1 style="color: white; font-size: 2.15rem; margin-top: 10px;">${selectedWordPair[0]} ${selectedWordPair[1]}</h1>
+          `;
+          emitSound(500, 0.1, 'square');
+          setTimeout(() => emitSound(700, 0.1, 'square'), 150);
+          setTimeout(() => emitSound(900, 0.3, 'square'), 300);
+        } else {
+          title.innerText = "¡ERROR! ❌";
+          title.style.color = "var(--danger)";
+          area.innerHTML = `
+            <div class="emoji-display">🤡</div>
+            <h2 style="color: var(--danger); margin-bottom: 5px;">${accusedName}</h2>
+            <h3 style="color: white; margin-bottom: 18px;">ERA INOCENTE</h3>
+            <p class="muted" style="font-weight:800;">Impostor(es):</p>
+            <h2 style="color: var(--danger); margin: 10px 0 18px 0;">${realImposters.join(" Y ")}</h2>
+            <p class="muted" style="font-weight:800;">La palabra era:</p>
+            <h1 style="color: white; font-size: 2.15rem; margin-top: 10px;">${selectedWordPair[0]} ${selectedWordPair[1]}</h1>
+          `;
+          emitSound(400, 0.3, 'sawtooth');
+          setTimeout(() => emitSound(300, 0.5, 'sawtooth'), 350);
+        }
+
+        changeScreen("i-scr-result");
+      }
+
+      function onEnter(){ if(players.length > 0) refreshLobbyUI(); }
+      if(players.length > 0) refreshLobbyUI();
+
+      return {
+        addPlayer, removePlayer, clearPlayers, initGame, revealRole, confirmAndNext,
+        toggleTimer, startVotingPhase, accusePlayer, changeScreen, onEnter
+      };
+    })();
+    window.Impostor = Impostor;
+
+    /********************
+     * YO NUNCA (100)
+     ********************/
+    const YoNunca = (() => {
+      const STORAGE_KEY_PLAYERS = "yonunca_players_v2";
+
+      const STATEMENTS = [
+        "he llegado tarde por quedarme dormido.",
+        "he enviado un audio y luego me he arrepentido.",
+        "he borrado un mensaje para que no lo vieran.",
+        "he dicho “ya voy” cuando ni me había alistado.",
+        "he fingido que no vi un mensaje a propósito.",
+        "me he reído en un momento que no debía.",
+        "he usado una excusa creativa para zafarme de un plan.",
+        "he stalkeado a alguien por curiosidad (sin interactuar).",
+        "he perdido algo importante y lo encontré en un lugar obvio.",
+        "he confundido a alguien en la calle y saludé con toda la confianza.",
+        "he cantado con sentimiento en público sin darme cuenta.",
+        "he buscado mi propio nombre en internet.",
+        "he guardado un screenshot “por si acaso”.",
+        "he intentado hacer una dieta y duré menos de un día.",
+        "he hecho un “día productivo” y terminé viendo videos.",
+        "he comprado algo solo porque estaba en oferta.",
+        "he usado un meme para responder algo serio.",
+        "he tenido una racha de suerte absurda un día.",
+        "he tenido una racha de mala suerte absurda un día.",
+        "he usado una palabra en inglés para sonar más pro.",
+        "he dicho que “conozco” una canción y solo sé el coro.",
+        "he fingido entender un tema para no preguntar.",
+        "he entrado a una reunión sin saber de qué era.",
+        "he olvidado el nombre de alguien justo después de conocerlo.",
+        "he llamado a alguien por el nombre equivocado.",
+        "he mandado un mensaje al chat equivocado.",
+        "me he quedado sin batería en el peor momento.",
+        "he usado el mismo password en más de una cuenta.",
+        "he dejado algo para último minuto y salió bien (de milagro).",
+        "he dejado algo para último minuto y salió mal (obvio).",
+        "he llorado con una película o serie que no lo merecía.",
+        "he “aceptado” un plan y luego me dio pereza.",
+        "he prometido empezar mañana y no empecé.",
+        "he usado el modo avión para que no entraran mensajes.",
+        "he dicho “cinco minutos más” más de tres veces seguidas.",
+        "he comido algo que se me cayó (regla de los 5 segundos).",
+        "he olvidado dónde parqueé.",
+        "he perdido las llaves y me estresé feo.",
+        "he tenido una conversación completa en mi cabeza antes de hablar.",
+        "he pensado demasiado un mensaje antes de enviarlo.",
+        "he buscado “cómo hacer…” algo demasiado básico.",
+        "he seguido un tutorial y terminó peor.",
+        "he visto un video “solo uno más” y fueron 20.",
+        "he iniciado una serie y no la terminé jamás.",
+        "he terminado una serie en un día.",
+        "he cambiado de opinión a último momento.",
+        "he aceptado un reto y me arrepentí a la mitad.",
+        "he tenido un apodo que me da pena.",
+        "he guardado una playlist para un mood específico.",
+        "he bailado solo en mi cuarto con toda la actitud.",
+        "he intentado un trend y lo hice mal.",
+        "he tenido un “crush” inesperado.",
+        "he sentido celos sin motivo real.",
+        "he dicho “no me importa” y sí me importaba.",
+        "he fingido que recordaba a alguien.",
+        "he dicho “ahorita” y fue en horas.",
+        "he dicho “ya casi” y faltaba muchísimo.",
+        "he dicho “voy en camino” sin salir.",
+        "he hecho una compra impulsiva nocturna.",
+        "he pedido comida y luego me dio culpa.",
+        "he comido por ansiedad/aburrimiento.",
+        "he tenido un “día de adulto” y me sentí poderoso.",
+        "he tenido un “día de caos” total.",
+        "he roto algo y lo escondí.",
+        "he perdido un control remoto por días.",
+        "he usado Google Maps para ir a un lugar que conozco.",
+        "he contestado “jajaja” sin reírme.",
+        "he leído un mensaje en notificación y no abrí el chat.",
+        "he puesto una alarma y la apagué sin acordarme.",
+        "he olvidado una fecha importante.",
+        "he confundido un día de la semana.",
+        "he tenido una discusión conmigo mismo en la ducha.",
+        "he ensayado una presentación hablando solo.",
+        "he hecho un voice note y lo grabé 5 veces.",
+        "he hecho una lista de pendientes y la ignoré.",
+        "he visto mi recibo y me sorprendí (para mal).",
+        "he dicho “solo voy a ver” y terminé comprando.",
+        "he perdido un paraguas el mismo día que lo compré.",
+        "me he quemado con algo por impaciente.",
+        "he usado lentes de sol para esconder que estaba cansado.",
+        "he tenido un “look” que hoy me da risa.",
+        "he querido cambiarme el nombre en redes por vergüenza.",
+        "he subido una historia y la borré por inseguridad.",
+        "he revisado si alguien vio mi historia demasiado rápido.",
+        "he comparado precios por horas para ahorrar poquito.",
+        "he comprado algo y luego vi más barato.",
+        "he guardado una caja “por si sirve” y nunca sirvió.",
+        "he tenido una risa que no pude controlar.",
+        "he dejado un “visto” por accidente.",
+        "he respondido tarde y dije “no me había salido”.",
+        "he tenido un malentendido por texto.",
+        "he malinterpretado un mensaje por el tono.",
+        "he usado stickers para evitar explicar.",
+        "he inventado una palabra de broma y se quedó.",
+        "he visto un tutorial de cocina y lo arruiné.",
+        "he probado una receta viral y no salió.",
+        "he pensado que era viernes y no lo era.",
+        "he estado en una videollamada sin pantalón cómodo (solo de casa).",
+        "he hecho multitarea y terminé sin hacer nada.",
+        "he dicho “hoy sí” y fue puro cuento.",
+        "he tenido miedo a preguntar y luego era fácil.",
+        "he hecho una promesa conmigo y la rompí.",
+        "he estado orgulloso de un logro pequeño."
+      ];
+
+      let players = [];
+      let totalToPlay = 0, playedCount = 0;
+      let deck = [], deckPos = 0;
+      let lastPlayerIndex = -1;
+      let turnsMode = "auto";
+
+      const $ = (id) => document.getElementById(id);
+
+      function shuffleArray(arr){
+        for(let i=arr.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [arr[i],arr[j]] = [arr[j],arr[i]];
+        }
+        return arr;
+      }
+      function renderPlayers(){
+        const el = $("y-playerList");
+        el.textContent = players.length ? "👥 " + players.join(", ") : "👥 (Opcional) Puedes jugar sin jugadores.";
+      }
+      function savePlayers(){ localStorage.setItem(STORAGE_KEY_PLAYERS, JSON.stringify(players)); renderPlayers(); }
+      function loadPlayers(){
+        try{ const raw = localStorage.getItem(STORAGE_KEY_PLAYERS);
+          if(raw){ const arr = JSON.parse(raw); if(Array.isArray(arr)) players = arr; }
+        }catch(e){}
+        renderPlayers();
+      }
+      function pickNextPlayer(){
+        if(players.length === 0) return "";
+        if(players.length === 1){ lastPlayerIndex = 0; return players[0]; }
+        let idx; do { idx = Math.floor(Math.random()*players.length); } while(idx === lastPlayerIndex);
+        lastPlayerIndex = idx; return players[idx];
+      }
+
+      function addPlayer(){
+        const input = $("y-inpName");
+        const name = (input.value||"").trim();
+        if(!name) return;
+        if(players.some(p => p.toLowerCase() === name.toLowerCase())){ input.value=""; return; }
+        players.push(name); input.value=""; savePlayers();
+      }
+
+      function shouldUseTurns(){
+        if(turnsMode === "on") return true;
+        if(turnsMode === "off") return false;
+        return players.length >= 2;
+      }
+
+      function startGame(){
+        turnsMode = $("y-selTurns").value;
+        const val = parseInt($("y-selQty").value,10);
+        totalToPlay = Math.min(val, STATEMENTS.length);
+        playedCount = 0; lastPlayerIndex = -1;
+        deck = shuffleArray([...Array(STATEMENTS.length).keys()]).slice(0, totalToPlay);
+        deckPos = 0;
+        $("y-scr-game").style.display = "block";
+        next();
+      }
+
+      function next(){
+        if(playedCount >= totalToPlay){
+          alert("¡Listo!");
+          end(true);
+          return;
+        }
+        const idx = deck[deckPos++];
+        playedCount++;
+        $("y-uiProgress").textContent = `Frase ${playedCount} de ${totalToPlay}`;
+        $("y-uiStatement").textContent = `Yo nunca ${STATEMENTS[idx]}`;
+        $("y-uiCurrentPlayer").textContent = shouldUseTurns() ? `Le toca leer: ${pickNextPlayer()}` : "";
+      }
+
+      function end(silent=false){
+        $("y-scr-game").style.display = "none";
+        playedCount = 0; totalToPlay = 0; deck = []; deckPos = 0;
+        if(!silent) alert("Terminado.");
+      }
+
+      function clearPlayers(){
+        if(!confirm("¿Borrar jugadores de Yo nunca?")) return;
+        players = [];
+        try{ localStorage.removeItem(STORAGE_KEY_PLAYERS); }catch(e){}
+        renderPlayers();
+        end(true);
+      }
+
+      function onEnter(){ renderPlayers(); }
+
+      loadPlayers();
+      return { addPlayer, startGame, next, end, clearPlayers, onEnter };
+    })();
+    window.YoNunca = YoNunca;
+
+    /********************
+     * INIT: restore last section + initial title
+     ********************/
+    (function init(){
+      let last = "menu";
+      try{
+        const stored = localStorage.getItem(SUITE_LAST_KEY);
+        if(stored) last = stored;
+      }catch(e){}
+      Suite.go(last);
+    })();
+  </script>
+</body>
+</html>
